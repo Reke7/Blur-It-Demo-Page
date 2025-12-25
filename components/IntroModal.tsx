@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface IntroModalProps {
@@ -69,7 +68,7 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-none">The Privacy Powerhouse</h2>
-              <p className="text-slate-400 text-sm mt-1">Master the features of Blur It to protect your demos.</p>
+              <p className="text-slate-400 text-sm mt-1">Master the features of Blur It to protect your confidential information.</p>
             </div>
           </div>
 
@@ -114,7 +113,7 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="bg-slate-800 px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-700">
-          <p className="text-xs text-slate-500 font-medium text-center sm:text-left">Use the dashboard below to test persistency while scrolling.</p>
+          <p className="text-xs text-slate-500 font-medium text-center sm:text-left">Explore the dashboard to see persistence in action.</p>
           <button 
             onClick={onClose}
             className="w-full sm:w-auto px-10 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-95 flex items-center justify-center gap-2"
