@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface CTAToastProps {
@@ -14,12 +13,12 @@ export const CTAToast: React.FC<CTAToastProps> = ({ isVisible }) => {
         <div className="flex items-start gap-4 mb-4">
           <div className="bg-blue-600/20 p-2 rounded-lg">
             <svg className="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04accura M12 21.75c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04 M12 21.75c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z" />
             </svg>
           </div>
           <div>
             <h4 className="font-bold text-white">Protection Active?</h4>
-            <p className="text-slate-400 text-sm mt-1">Works perfectly? Secure your demos and shield your private data today.</p>
+            <p className="text-slate-400 text-sm mt-1">Shield your private data and secure your demos today.</p>
           </div>
         </div>
         

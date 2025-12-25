@@ -6,7 +6,6 @@ import { MetricGrid } from './components/MetricGrid';
 import { DataTable } from './components/DataTable';
 import { CTAToast } from './components/CTAToast';
 import { IntroModal } from './components/IntroModal';
-import { DraggableToolbar } from './components/DraggableToolbar';
 
 const App: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -18,12 +17,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen text-slate-50 relative selection:bg-blue-500/30">
+    <div className="flex min-h-screen text-slate-50 relative">
       {/* Introduction Modal */}
       <IntroModal isOpen={isIntroOpen} onClose={() => setIsIntroOpen(false)} />
-
-      {/* Floating extension UI simulation */}
-      <DraggableToolbar />
 
       {/* Fixed Sidebar */}
       <Sidebar />
@@ -37,16 +33,16 @@ const App: React.FC = () => {
         <Header />
 
         <main className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto w-full">
-          <section>
-            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+          <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-3">
               <span className="w-1.5 h-6 bg-blue-500 rounded-full"></span>
               Platform Performance Overview
             </h2>
             <MetricGrid />
           </section>
 
-          <section className="bg-slate-900/40 border border-slate-800/60 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm transition-all hover:border-slate-700/60">
-            <div className="p-6 border-b border-slate-800/60 flex justify-between items-center bg-slate-900/20">
+          <section className="bg-slate-900/40 border border-slate-800/60 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+            <div className="p-6 border-b border-slate-800/60 flex justify-between items-center">
               <div>
                 <h2 className="text-lg font-semibold text-white">Sensitive Financial Data</h2>
                 <p className="text-slate-400 text-sm">Direct API access logs and revenue streams.</p>
@@ -59,7 +55,7 @@ const App: React.FC = () => {
             <DataTable />
           </section>
 
-          {/* Bottom padding to ensure scrollability for testing */}
+          {/* Spacer to ensure scrollability for testing */}
           <div className="h-48"></div>
         </main>
       </div>

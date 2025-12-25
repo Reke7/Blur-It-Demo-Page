@@ -9,12 +9,11 @@
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #020617; /* Deeper black-slate */
+        background-color: #020617;
         color: #f8fafc;
         margin: 0;
         overflow-x: hidden;
       }
-      /* Custom scrollbar for that sleek SaaS look */
       ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -45,16 +44,18 @@
           radial-gradient(at 0% 100%, hsla(217,32%,15%,1) 0, transparent 50%);
       }
     </style>
-  <script type="importmap">
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
+    "react": "https://esm.sh/react@19",
+    "react-dom": "https://esm.sh/react-dom@19",
+    "react-dom/client": "https://esm.sh/react-dom@19/client",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
-</head>
+  </head>
   <body>
     <div class="mesh-bg"></div>
     <div id="root"></div>
