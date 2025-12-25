@@ -68,7 +68,7 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-none">The Privacy Powerhouse</h2>
-              <p className="text-slate-400 text-sm mt-1">Master the features of Blur It to protect your confidential information.</p>
+              <p className="text-slate-400 text-sm mt-1">Master the features of Blur It to protect your confidential information during sessions.</p>
             </div>
           </div>
 
@@ -98,7 +98,7 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
                 </div>
-                <p>Install the extension and click the icon to reveal the <b>Control Panel</b>.</p>
+                <p>Install the extension and click the icon in your browser to reveal the <b>Control Panel</b>.</p>
               </div>
               <div className="flex items-start gap-3">
                 <div className="p-1 bg-slate-800 rounded text-blue-400 flex-shrink-0">
@@ -107,7 +107,7 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                 </div>
-                <p>Use the <b>Select Tool</b> to hide any element instantly while browsing this dashboard.</p>
+                <p>Use the <b>Select Tool</b> to hide any dashboard element instantly while you navigate.</p>
               </div>
             </div>
           </div>

@@ -17,7 +17,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen text-slate-50 relative">
+    <div className="flex min-h-screen text-slate-50 relative selection:bg-blue-500/30">
       {/* Introduction Modal */}
       <IntroModal isOpen={isIntroOpen} onClose={() => setIsIntroOpen(false)} />
 
@@ -41,13 +41,13 @@ const App: React.FC = () => {
             <MetricGrid />
           </section>
 
-          <section className="bg-slate-900/40 border border-slate-800/60 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
-            <div className="p-6 border-b border-slate-800/60 flex justify-between items-center">
+          <section className="bg-slate-900/40 border border-slate-800/60 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-sm animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150 transition-all hover:border-slate-700/60">
+            <div className="p-6 border-b border-slate-800/60 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/20">
               <div>
                 <h2 className="text-lg font-semibold text-white">Sensitive Financial Data</h2>
-                <p className="text-slate-400 text-sm">Direct API access logs and revenue streams.</p>
+                <p className="text-slate-400 text-sm">Direct API access logs and revenue streams for primary accounts.</p>
               </div>
-              <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-semibold border border-slate-700 transition-all">
+              <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-semibold border border-slate-700 transition-all text-slate-200">
                 Export CSV
               </button>
             </div>
