@@ -127,22 +127,22 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
   };
 
   const renderWelcome = () => (
-    <div className="flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-lg mx-auto py-4">
-      <div className="w-20 h-20 bg-blue-600 rounded-[28px] flex items-center justify-center shadow-xl shadow-blue-500/30 mb-8">
-        {Icons.Shield("w-10 h-10 text-white")}
+    <div className="flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-lg mx-auto py-2">
+      <div className="w-16 h-16 bg-blue-600 rounded-[24px] flex items-center justify-center shadow-xl shadow-blue-500/30 mb-6">
+        {Icons.Shield("w-8 h-8 text-white")}
       </div>
-      <h2 className="text-4xl font-black text-white mb-4 tracking-tight leading-tight">Welcome to Blur It!</h2>
-      <p className="text-slate-400 text-lg mb-10 leading-relaxed max-w-md">
-        Before you try the demo, help us personalize your experience (takes 20 seconds).
+      <h2 className="text-3xl font-black text-slate-100 mb-3 tracking-tight">Welcome to Blur It!</h2>
+      <p className="text-slate-400 text-base mb-8 leading-relaxed max-w-sm">
+        Help us personalize your experience (takes 20 seconds).
       </p>
-      <div className="w-full space-y-3 max-w-xs">
+      <div className="w-full space-y-2 max-w-[280px]">
         <button 
           onClick={() => setStep('role')}
-          className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-3 text-xl"
+          className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
         >
-          Let's Go {Icons.ArrowRight("w-6 h-6")}
+          Let's Go {Icons.ArrowRight("w-5 h-5")}
         </button>
-        <button onClick={onClose} className="w-full py-2 text-slate-500 font-bold hover:text-slate-300 transition-colors text-base">
+        <button onClick={onClose} className="w-full py-2 text-slate-500 font-bold hover:text-slate-300 transition-colors text-sm">
           Skip to demo
         </button>
       </div>
@@ -151,97 +151,95 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
 
   const renderRoleSelection = () => (
     <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-black text-white tracking-tight">Who are you?</h2>
-        <span className="text-slate-500 text-[10px] font-black bg-slate-800 px-3 py-1 rounded-full border border-slate-700 uppercase tracking-widest">1 of 3</span>
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-xl font-black text-slate-100 tracking-tight">Who are you?</h2>
+        <span className="text-slate-500 text-[9px] font-black bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700 uppercase tracking-widest">1 / 3</span>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 mb-5 max-h-[45vh] overflow-y-auto pr-2 custom-scrollbar">
         {ROLES.map((role) => (
           <button
             key={role.id}
             onClick={() => { setSelectedRole(role); setStep('pain'); }}
-            className="group flex flex-col items-start gap-3 p-5 rounded-2xl border-2 bg-slate-800/40 border-slate-700/50 hover:border-blue-500 hover:bg-slate-800 transition-all text-left"
+            className="group flex flex-col items-start gap-2.5 p-4 rounded-xl border-2 bg-slate-800/40 border-slate-700/50 hover:border-blue-500 hover:bg-slate-800 transition-all text-left"
           >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all flex-shrink-0">
-              {role.icon("w-7 h-7")}
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center border border-slate-700 bg-slate-800 text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all flex-shrink-0">
+              {role.icon("w-6 h-6")}
             </div>
             <div>
-              <h4 className="text-base font-black text-white group-hover:text-blue-400 transition-colors mb-0.5">{role.title}</h4>
-              <p className="text-[11px] text-slate-500 font-medium leading-tight">{role.sub}</p>
+              <h4 className="text-sm font-black text-slate-200 group-hover:text-blue-400 transition-colors mb-0.5">{role.title}</h4>
+              <p className="text-[10px] text-slate-500 font-medium leading-tight">{role.sub}</p>
             </div>
           </button>
         ))}
       </div>
-      <div className="flex items-center justify-between border-t border-slate-800 pt-6">
-        <button onClick={() => setStep('welcome')} className="text-slate-500 hover:text-white flex items-center gap-2 transition-colors font-black text-base">
-          {Icons.ArrowLeft("w-4 h-4")} Back
+      <div className="flex items-center justify-between border-t border-slate-800 pt-5">
+        <button onClick={() => setStep('welcome')} className="text-slate-500 hover:text-white flex items-center gap-1.5 transition-colors font-black text-sm">
+          {Icons.ArrowLeft("w-3.5 h-3.5")} Back
         </button>
-        <button onClick={onClose} className="text-slate-500 hover:text-white font-black text-base">Skip</button>
+        <button onClick={onClose} className="text-slate-500 hover:text-white font-black text-sm">Skip</button>
       </div>
     </div>
   );
 
   const renderPainPoints = () => (
     <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-black text-white leading-tight">
-          What worries you most?
-        </h2>
-        <span className="text-slate-500 text-[10px] font-black bg-slate-800 px-3 py-1 rounded-full border border-slate-700 uppercase tracking-widest">2 of 3</span>
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-xl font-black text-slate-100 leading-tight">What worries you most?</h2>
+        <span className="text-slate-500 text-[9px] font-black bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700 uppercase tracking-widest">2 / 3</span>
       </div>
-      <div className="space-y-3 mb-6">
+      <div className="space-y-2 mb-5">
         {selectedRole?.pains.map((pain, i) => (
           <button
             key={i}
             onClick={() => setStep('consequence')}
-            className="w-full p-4 text-left rounded-2xl border-2 bg-slate-800/40 border-slate-700/50 hover:border-blue-500 hover:bg-slate-800 transition-all group flex items-center gap-4"
+            className="w-full p-3.5 text-left rounded-xl border bg-slate-800/40 border-slate-700/50 hover:border-blue-500 hover:bg-slate-800 transition-all group flex items-center gap-3"
           >
-            <div className="w-2.5 h-2.5 rounded-full bg-slate-700 group-hover:bg-blue-500 transition-colors flex-shrink-0"></div>
-            <span className="text-base text-slate-300 font-bold group-hover:text-white leading-tight">{pain}</span>
+            <div className="w-2 h-2 rounded-full bg-slate-700 group-hover:bg-blue-500 transition-colors flex-shrink-0"></div>
+            <span className="text-sm text-slate-300 font-bold group-hover:text-slate-100 leading-tight">{pain}</span>
           </button>
         ))}
       </div>
-      <div className="flex items-center justify-between border-t border-slate-800 pt-6">
-        <button onClick={() => setStep('role')} className="text-slate-500 hover:text-white flex items-center gap-2 transition-colors font-black text-base">
-          {Icons.ArrowLeft("w-4 h-4")} Back
+      <div className="flex items-center justify-between border-t border-slate-800 pt-5">
+        <button onClick={() => setStep('role')} className="text-slate-500 hover:text-white flex items-center gap-1.5 transition-colors font-black text-sm">
+          {Icons.ArrowLeft("w-3.5 h-3.5")} Back
         </button>
-        <button onClick={onClose} className="text-slate-500 hover:text-white font-black text-base">Skip</button>
+        <button onClick={onClose} className="text-slate-500 hover:text-white font-black text-sm">Skip</button>
       </div>
     </div>
   );
 
   const renderConsequence = () => (
     <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-black text-white tracking-tight">You're in good company.</h2>
-        <span className="text-slate-500 text-[10px] font-black bg-slate-800 px-3 py-1 rounded-full border border-slate-700 uppercase tracking-widest">3 of 3</span>
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-xl font-black text-slate-100 tracking-tight">You're in good company.</h2>
+        <span className="text-slate-500 text-[9px] font-black bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700 uppercase tracking-widest">3 / 3</span>
       </div>
-      <div className="bg-blue-600/10 border-2 border-blue-500/20 rounded-[32px] p-8 mb-8 space-y-6 relative overflow-hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-slate-900/60 p-5 rounded-2xl border border-white/5 backdrop-blur-sm">
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">Industry Stat</p>
-            <p className="text-lg text-white font-black leading-tight">{selectedRole?.stat}</p>
+      <div className="bg-blue-600/10 border border-blue-500/20 rounded-2xl p-6 mb-6 space-y-4 relative overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="bg-slate-900/60 p-4 rounded-xl border border-white/5">
+            <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-1">Industry Stat</p>
+            <p className="text-sm text-slate-200 font-black leading-tight">{selectedRole?.stat}</p>
           </div>
-          <div className="bg-slate-900/60 p-5 rounded-2xl border border-white/5 backdrop-blur-sm">
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">Hidden Cost</p>
-            <p className="text-lg text-white font-black leading-tight">{selectedRole?.fact}</p>
+          <div className="bg-slate-900/60 p-4 rounded-xl border border-white/5">
+            <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-1">Efficiency Loss</p>
+            <p className="text-sm text-slate-200 font-black leading-tight">{selectedRole?.fact}</p>
           </div>
         </div>
-        <div className="bg-blue-600/20 p-5 rounded-2xl border border-blue-500/30 flex items-center gap-4">
-          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white flex-shrink-0">
-            {Icons.Check("w-5 h-5")}
+        <div className="bg-blue-600/20 p-4 rounded-xl border border-blue-500/30 flex items-center gap-3">
+          <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center text-white flex-shrink-0">
+            {Icons.Check("w-4 h-4")}
           </div>
-          <p className="text-lg text-blue-100 font-black">{selectedRole?.cta}</p>
+          <p className="text-base text-blue-100 font-black leading-tight">{selectedRole?.cta}</p>
         </div>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <button
           onClick={() => setStep('tutorial_intro')}
-          className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-3 text-2xl"
+          className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-3 text-xl"
         >
-          Try It Now {Icons.ArrowRight("w-7 h-7")}
+          Try It Now {Icons.ArrowRight("w-6 h-6")}
         </button>
-        <button onClick={() => setStep('pain')} className="text-slate-500 hover:text-white flex items-center justify-center gap-2 transition-colors font-bold text-sm">
+        <button onClick={() => setStep('pain')} className="text-slate-500 hover:text-white flex items-center justify-center gap-1.5 transition-colors font-bold text-xs">
           {Icons.ArrowLeft("w-3 h-3")} Back
         </button>
       </div>
@@ -250,21 +248,21 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
 
   const renderTutorialIntro = () => (
     <div className="flex flex-col animate-in fade-in slide-in-from-right-4 duration-500">
-      <h2 className="text-3xl font-black text-white mb-6 tracking-tight">Mastering Privacy</h2>
-      <div className="space-y-4 mb-8 w-full max-h-[45vh] overflow-y-auto pr-2 custom-scrollbar">
-        <div className="bg-slate-800/50 p-6 rounded-[28px] border-2 border-slate-700/50">
-          <p className="text-lg text-slate-200 leading-relaxed font-bold">
-            Click the <span className="text-blue-500 underline underline-offset-4">blue knob</span> on the left of your tab window to show the toolbar.
+      <h2 className="text-2xl font-black text-slate-100 mb-5 tracking-tight">Setup Instructions</h2>
+      <div className="space-y-3 mb-6 w-full max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+        <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+          <p className="text-base text-slate-300 leading-relaxed font-bold">
+            Toggle the <span className="text-blue-500 underline underline-offset-4">blue knob</span> on the left of your tab to show the toolbar.
           </p>
         </div>
-        <div className="bg-slate-800/50 p-6 rounded-[28px] border-2 border-slate-700/50">
-          <ul className="text-lg text-slate-200 space-y-4 font-bold">
-            <li className="flex items-start gap-4">
-              <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-black">1</span>
-              <span><strong>Finish Selecting:</strong> Press <strong>Esc</strong> key.</span>
+        <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
+          <ul className="text-sm text-slate-300 space-y-3 font-bold">
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-[10px] font-black">1</span>
+              <span><strong>Exit Select:</strong> Press <strong>Esc</strong> key after blurring.</span>
             </li>
-            <li className="flex items-start gap-4">
-              <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-black">2</span>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-[10px] font-black">2</span>
               <span><strong>Stop Drawing:</strong> Re-click the square icon.</span>
             </li>
           </ul>
@@ -272,17 +270,17 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
       </div>
       <button 
         onClick={onStartTutorial}
-        className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-4 text-2xl"
+        className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-3 text-xl"
       >
-        Start Practice {Icons.ArrowRight("w-7 h-7")}
+        Start Practice {Icons.ArrowRight("w-6 h-6")}
       </button>
     </div>
   );
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-2xl">
-      <div className="bg-slate-900 border-2 border-slate-800/80 rounded-[48px] shadow-2xl max-w-3xl w-full overflow-hidden flex flex-col animate-in zoom-in-95 duration-500 max-h-[90vh]">
-        <div className="p-8 md:p-12 overflow-y-auto custom-scrollbar">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-xl">
+      <div className="bg-slate-900 border-2 border-slate-800/80 rounded-[36px] shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col animate-in zoom-in-95 duration-500 max-h-[85vh]">
+        <div className="p-7 md:p-10 overflow-y-auto custom-scrollbar">
           {step === 'welcome' && renderWelcome()}
           {step === 'role' && renderRoleSelection()}
           {step === 'pain' && renderPainPoints()}

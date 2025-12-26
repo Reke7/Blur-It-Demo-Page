@@ -1,26 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 interface TutorialSystemProps {
   isActive: boolean;
   onComplete: () => void;
 }
 
-type Step = 0 | 1 | 2 | 3; // 0: Select, 1: Draw, 2: Clear, 3: Complete
+type Step = 0 | 1 | 2; // 0: Select + Clear, 1: Draw + Clear, 2: Complete
 
 export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComplete }) => {
   const [step, setStep] = useState<Step>(0);
   const [spotlightRect, setSpotlightRect] = useState<DOMRect | null>(null);
-  const [demoActioned, setDemoActioned] = useState(false);
+  
+  // Track specific tool phases within a step
+  const [hasBlurred, setHasBlurred] = useState(false);
+  const [hasCleared, setHasCleared] = useState(false);
 
   const updateSpotlight = useCallback(() => {
-    const ids = ['#blur-it-selector', '#blur-it-area', '#blur-it-clear'];
-    const el = document.querySelector(ids[step]);
+    // Spotlight the tool based on phase
+    const toolId = !hasBlurred 
+      ? (step === 0 ? '#blur-it-selector' : '#blur-it-area')
+      : '#blur-it-clear';
+    
+    const el = document.querySelector(toolId);
     if (el) {
       setSpotlightRect(el.getBoundingClientRect());
     } else {
       setSpotlightRect(null);
     }
-  }, [step]);
+  }, [step, hasBlurred]);
 
   useEffect(() => {
     if (isActive) {
@@ -38,31 +45,30 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
   useEffect(() => {
     if (!isActive) return;
 
-    // We check for the completion of the action for the current step
     const checkInterval = setInterval(() => {
-      let isDone = false;
-      if (step === 0) isDone = document.querySelectorAll('.blurred-element').length > 0;
-      if (step === 1) isDone = document.querySelectorAll('.blur-rect').length > 0;
-      if (step === 2) {
-        // Clear is done if the count of blurs becomes zero after being > 0
-        const blurCount = document.querySelectorAll('.blurred-element, .blur-rect').length;
-        if (blurCount === 0) isDone = true;
+      const blurCount = document.querySelectorAll('.blurred-element, .blur-rect').length;
+
+      // Logic: User must blur first
+      if (!hasBlurred && blurCount > 0) {
+        setHasBlurred(true);
       }
 
-      if (isDone && !demoActioned) {
-        setDemoActioned(true);
+      // Logic: Once blurred, user must clear
+      if (hasBlurred && !hasCleared && blurCount === 0) {
+        setHasCleared(true);
       }
-    }, 500);
+    }, 300);
 
     return () => clearInterval(checkInterval);
-  }, [isActive, step, demoActioned]);
+  }, [isActive, hasBlurred, hasCleared]);
 
   const handleNext = () => {
-    if (step < 2) {
+    if (step < 1) {
       setStep((s) => (s + 1) as Step);
-      setDemoActioned(false);
+      setHasBlurred(false);
+      setHasCleared(false);
     } else {
-      setStep(3);
+      setStep(2);
     }
   };
 
@@ -82,13 +88,13 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
       <div 
         className="absolute inset-0 bg-slate-950/80 transition-all duration-500 pointer-events-auto"
         style={{
-          clipPath: spotlightRect && step < 3
+          clipPath: spotlightRect && step < 2
             ? `polygon(0% 0%, 0% 100%, ${spotlightRect.left}px 100%, ${spotlightRect.left}px ${spotlightRect.top}px, ${spotlightRect.right}px ${spotlightRect.top}px, ${spotlightRect.right}px ${spotlightRect.bottom}px, ${spotlightRect.left}px ${spotlightRect.bottom}px, ${spotlightRect.left}px 100%, 100% 100%, 100% 0%)`
             : 'none'
         }}
       ></div>
 
-      {spotlightRect && step < 3 && (
+      {spotlightRect && step < 2 && (
         <div 
           className="absolute border-2 border-blue-500 rounded-xl animate-pulse shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all duration-300 pointer-events-none"
           style={{
@@ -102,11 +108,11 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-4">
         <div className="max-w-md w-full pointer-events-auto animate-in fade-in slide-in-from-bottom-6 duration-700">
-          {step < 3 ? (
-            <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden border border-slate-200">
+          {step < 2 ? (
+            <div className="bg-white rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden border border-slate-200 text-slate-900">
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[9px] font-black uppercase tracking-widest">
-                  Step {step + 1} of 3
+                  Task {step + 1} of 2
                 </span>
                 <button 
                   onClick={handleFinish}
@@ -116,53 +122,54 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                 </button>
               </div>
 
-              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-tight flex items-center gap-3">
-                {step === 0 && (
+              <h3 className="text-xl font-black mb-3 tracking-tight flex items-center gap-3">
+                {step === 0 ? (
                   <>
-                    <span>Select Mode</span>
-                    <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
-                    </svg>
+                    <span>{hasBlurred ? 'Clear Selection' : 'Element Selection'}</span>
+                    {!hasBlurred ? (
+                      <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
+                      </svg>
+                    ) : Icons.Trash("w-5 h-5 text-rose-500")}
                   </>
-                )}
-                {step === 1 && (
+                ) : (
                   <>
-                    <span>Draw Mode</span>
-                    <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4h16v16H4z" />
-                    </svg>
-                  </>
-                )}
-                {step === 2 && (
-                  <>
-                    <span>Clear All Blurs</span>
-                    {Icons.Trash("w-5 h-5 text-rose-500")}
+                    <span>{hasBlurred ? 'Clear Area' : 'Draw Protection'}</span>
+                    {!hasBlurred ? (
+                      <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4h16v16H4z" />
+                      </svg>
+                    ) : Icons.Trash("w-5 h-5 text-rose-500")}
                   </>
                 )}
               </h3>
 
-              <div className="text-slate-600 mb-6 leading-relaxed font-medium space-y-3">
-                {step === 0 && (
+              <div className="text-slate-600 mb-6 leading-relaxed font-medium space-y-4">
+                {!hasBlurred ? (
                   <>
-                    <p className="text-sm">Use the <strong>Select tool</strong> to blur emails in the practice zone.</p>
-                    <p className="text-[11px] bg-amber-50 p-2 rounded-lg border border-amber-200">Tip: Press <strong>Esc</strong> to stop selecting.</p>
+                    <p className="text-sm">
+                      Use the <strong>{step === 0 ? 'Select tool' : 'Draw tool'}</strong> to {step === 0 ? 'click sensitive data' : 'cover an area'} in the practice zone.
+                    </p>
+                    {step === 0 && (
+                      <p className="text-[10px] bg-amber-50 p-2 rounded-lg border border-amber-200 text-amber-900 font-bold">
+                        TIP: Press ESC key after selecting to exit the mode.
+                      </p>
+                    )}
                   </>
-                )}
-                {step === 1 && (
-                  <p className="text-sm">Use the <strong>Draw tool</strong> to cover larger areas by clicking and dragging.</p>
-                )}
-                {step === 2 && (
-                  <p className="text-sm">Finally, click the <strong>Trash icon</strong> on the toolbar to clear everything and start fresh.</p>
+                ) : (
+                  <p className="text-sm">
+                    Great! Now click the <strong>Trash icon</strong> on your toolbar to clear the blurs and start fresh.
+                  </p>
                 )}
               </div>
 
-              {step < 2 && (
+              {!hasCleared && (
                 <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-4 mb-6 transition-all">
                   <p className="text-[9px] uppercase font-black text-slate-400 tracking-widest mb-3">Practice Zone</p>
                   
                   {step === 0 && (
                     <div className="space-y-2">
-                      {['private@data.io', 'ceo@vault.net'].map((email, i) => (
+                      {['personal@data.io', 'confidential@vault.net'].map((email, i) => (
                         <div 
                           key={i} 
                           className="p-3 bg-white border border-slate-200 rounded-lg text-xs text-slate-700 font-bold shadow-sm cursor-crosshair"
@@ -174,14 +181,14 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                   )}
 
                   {step === 1 && (
-                    <div className="p-6 bg-slate-900 rounded-xl shadow-lg border border-slate-700 cursor-crosshair text-center">
-                      <div className="text-white/20 text-xs font-black uppercase tracking-widest">Sensitive Area</div>
+                    <div className="p-8 bg-slate-900 rounded-xl shadow-lg border border-slate-700 cursor-crosshair text-center">
+                      <div className="text-white/20 text-xs font-black uppercase tracking-widest">Confidential Document</div>
                     </div>
                   )}
                 </div>
               )}
 
-              {demoActioned ? (
+              {hasCleared ? (
                 <div className="animate-in zoom-in-95 duration-300">
                   <div className="flex items-center gap-2 text-emerald-600 font-bold text-base mb-4">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
@@ -191,14 +198,14 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                     onClick={handleNext}
                     className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-3 text-sm"
                   >
-                    {step < 2 ? 'Next Step' : 'Finish Tutorial'}
+                    {step < 1 ? 'Next Lesson' : 'Finish Tutorial'}
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                   </button>
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-3 text-slate-400 text-[11px] font-bold py-3 bg-slate-50 rounded-xl border border-slate-100">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping"></div>
-                  Waiting for toolbar action...
+                  Waiting for {!hasBlurred ? 'blur' : 'clear'} action...
                 </div>
               )}
             </div>
@@ -207,9 +214,9 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
               <div className="w-20 h-20 bg-emerald-500 text-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-500/20">
                 <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
-              <h3 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Setup Complete</h3>
+              <h3 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Fully Prepared</h3>
               <p className="text-slate-500 mb-6 font-bold uppercase tracking-[0.2em] text-[10px]">
-                You are ready to share safely.
+                Privacy is now your default setting.
               </p>
               <button 
                 onClick={handleFinish}
