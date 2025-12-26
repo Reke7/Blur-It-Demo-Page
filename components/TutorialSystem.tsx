@@ -13,33 +13,37 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
   const [isCelebration, setIsCelebration] = useState(false);
   const [demoActioned, setDemoActioned] = useState(false);
 
-  // Spotlight positioning
+  // Spotlight positioning logic targeting external extension IDs
   const updateSpotlight = useCallback(() => {
     const ids = ['#blur-it-selector', '#blur-it-area', '#blur-it-smart'];
     const el = document.querySelector(ids[step]);
     if (el) {
       setSpotlightRect(el.getBoundingClientRect());
+    } else {
+      setSpotlightRect(null); // Extension toolbar might be hidden or moving
     }
   }, [step]);
 
   useEffect(() => {
     if (isActive) {
-      updateSpotlight();
+      const interval = setInterval(updateSpotlight, 100); // More frequent updates to track extension UI
       window.addEventListener('resize', updateSpotlight);
       window.addEventListener('scroll', updateSpotlight);
       return () => {
+        clearInterval(interval);
         window.removeEventListener('resize', updateSpotlight);
         window.removeEventListener('scroll', updateSpotlight);
       };
     }
   }, [isActive, updateSpotlight]);
 
-  // Check for completion logic
+  // Observer/Poller to check if the extension has performed its job
   useEffect(() => {
     if (!isActive) return;
 
     const checkInterval = setInterval(() => {
       let isDone = false;
+      // We check for the classes/elements the user's extension is expected to inject
       if (step === 0) isDone = document.querySelectorAll('.blurred-element').length > 0;
       if (step === 1) isDone = document.querySelectorAll('.blur-rect').length > 0;
       if (step === 2) isDone = document.querySelectorAll('.smart-blur-overlay:not(.hidden)').length > 0;
@@ -72,9 +76,9 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
 
   return (
     <div className="fixed inset-0 z-[10000] pointer-events-none">
-      {/* Dark Overlay with Hole */}
+      {/* Dark Overlay with Dynamic Hole */}
       <div 
-        className="absolute inset-0 bg-slate-950/85 transition-all duration-700 pointer-events-auto"
+        className="absolute inset-0 bg-slate-950/85 transition-all duration-500 pointer-events-auto"
         style={{
           clipPath: spotlightRect && step < 3
             ? `polygon(0% 0%, 0% 100%, ${spotlightRect.left}px 100%, ${spotlightRect.left}px ${spotlightRect.top}px, ${spotlightRect.right}px ${spotlightRect.top}px, ${spotlightRect.right}px ${spotlightRect.bottom}px, ${spotlightRect.left}px ${spotlightRect.bottom}px, ${spotlightRect.left}px 100%, 100% 100%, 100% 0%)`
@@ -82,10 +86,10 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
         }}
       ></div>
 
-      {/* Spotlight Border */}
+      {/* Visual Feedback for Spotlight */}
       {spotlightRect && step < 3 && (
         <div 
-          className="absolute border-2 border-blue-500 rounded-xl animate-pulse shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-500 pointer-events-none"
+          className="absolute border-2 border-blue-500 rounded-xl animate-pulse shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all duration-300 pointer-events-none"
           style={{
             top: spotlightRect.top - 4,
             left: spotlightRect.left - 4,
@@ -95,50 +99,45 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
         />
       )}
 
-      {/* Tutorial Instruction Card */}
+      {/* Tutorial Card */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="max-w-md w-full mx-4 pointer-events-auto animate-in fade-in slide-in-from-bottom-10 duration-700">
           {step < 3 ? (
-            <div className="bg-white rounded-[2rem] p-8 shadow-2xl relative overflow-hidden group">
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group border border-slate-200">
               <div className="flex items-center justify-between mb-6">
-                <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-bold uppercase tracking-widest">
+                <span className="px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-[10px] font-black uppercase tracking-[0.15em]">
                   Step {step + 1} of 3
                 </span>
                 <button 
                   onClick={handleFinish}
-                  className="text-slate-400 hover:text-slate-600 text-sm font-medium transition-colors"
+                  className="text-slate-400 hover:text-slate-900 text-sm font-bold transition-colors"
                 >
                   Skip Tutorial
                 </button>
               </div>
 
-              <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">
+              <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight">
                 {step === 0 && '🎯 Select Mode'}
                 {step === 1 && '✏️ Draw Mode'}
                 {step === 2 && '⚡ Smart Blur'}
               </h3>
 
-              <p className="text-slate-600 mb-8 leading-relaxed">
-                {step === 0 && "Click the 'Select' button on the toolbar, then click any of the email addresses below to hide them instantly."}
-                {step === 1 && "Click the 'Draw' button, then drag your mouse over the credit card area below to mask it."}
-                {step === 2 && "Finally, click the 'Smart Blur' button to automatically detect and hide all sensitive data at once."}
+              <p className="text-slate-600 mb-8 leading-relaxed font-medium">
+                {step === 0 && "Use your extension's 'Select' tool to click any of the email addresses in the practice zone below."}
+                {step === 1 && "Select the 'Draw' tool from your extension, then click and drag over the credit card card below."}
+                {step === 2 && "Finally, trigger your extension's 'Smart Blur' feature to see it automatically detect the sensitive data below."}
               </p>
 
-              {/* Demo Area */}
-              <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-6 mb-8 transition-all group-hover:border-blue-200">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-4">Practice Zone</p>
+              {/* Practice Zone - Designed for Extension Targeting */}
+              <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl p-6 mb-8 transition-all group-hover:border-blue-300/50">
+                <p className="text-[10px] uppercase font-black text-slate-400 tracking-[0.2em] mb-4">Practice Zone</p>
                 
                 {step === 0 && (
                   <div className="space-y-3">
-                    {['jane.doe@company.com', 'admin@server.io', 'support@client.net'].map((email, i) => (
+                    {['jane.doe@company.com', 'admin@secure-vault.io', 'ceo@growth-labs.net'].map((email, i) => (
                       <div 
                         key={i} 
-                        onClick={(e) => {
-                           if(document.querySelector('#blur-it-selector')?.classList.contains('bg-blue-600')) {
-                             e.currentTarget.classList.add('blurred-element', 'bg-slate-200', 'text-transparent', 'select-none', 'blur-sm');
-                           }
-                        }}
-                        className="p-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 font-medium cursor-crosshair hover:border-blue-300 transition-colors"
+                        className="p-4 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 font-bold shadow-sm hover:shadow-md transition-all cursor-crosshair"
                       >
                         📧 {email}
                       </div>
@@ -147,48 +146,30 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                 )}
 
                 {step === 1 && (
-                  <div 
-                    className="relative p-6 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg border border-slate-700 cursor-crosshair overflow-hidden"
-                    onMouseDown={(e) => {
-                      if(document.querySelector('#blur-it-area')?.classList.contains('bg-blue-600')) {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const blurBox = document.createElement('div');
-                        blurBox.className = 'blur-rect absolute bg-slate-900/80 backdrop-blur-xl border border-white/10 z-50 pointer-events-none';
-                        blurBox.style.left = `${e.clientX - rect.left}px`;
-                        blurBox.style.top = `${e.clientY - rect.top}px`;
-                        blurBox.style.width = '120px';
-                        blurBox.style.height = '40px';
-                        e.currentTarget.appendChild(blurBox);
-                      }
-                    }}
-                  >
-                    <div className="flex justify-between items-start mb-8">
-                      <div className="w-10 h-10 bg-amber-400/20 rounded-md"></div>
-                      <div className="text-white/20 text-xl font-bold italic tracking-tighter">VISA</div>
+                  <div className="relative p-8 bg-gradient-to-br from-slate-800 to-slate-950 rounded-2xl shadow-xl border border-slate-700 cursor-crosshair overflow-hidden group/card">
+                    <div className="flex justify-between items-start mb-10">
+                      <div className="w-12 h-12 bg-white/5 rounded-lg border border-white/10 flex items-center justify-center">
+                        <div className="w-8 h-6 bg-amber-500/40 rounded-sm"></div>
+                      </div>
+                      <div className="text-white/10 text-2xl font-black italic tracking-tighter">PREMIUM</div>
                     </div>
-                    <div className="text-white font-mono text-lg tracking-[0.2em] mb-4">4242 4242 4242 4242</div>
-                    <div className="flex gap-4">
-                      <div><p className="text-[8px] text-white/30 uppercase">Expiry</p><p className="text-xs text-white">12/28</p></div>
-                      <div><p className="text-[8px] text-white/30 uppercase">CVC</p><p className="text-xs text-white">***</p></div>
+                    <div className="text-white font-mono text-xl tracking-[0.25em] mb-6 drop-shadow-lg">4242 4242 4242 4242</div>
+                    <div className="flex gap-6">
+                      <div><p className="text-[9px] text-white/30 uppercase font-bold tracking-widest mb-1">Expiry</p><p className="text-xs text-white font-bold">12/28</p></div>
+                      <div><p className="text-[9px] text-white/30 uppercase font-bold tracking-widest mb-1">CVC</p><p className="text-xs text-white font-bold">***</p></div>
                     </div>
                   </div>
                 )}
 
                 {step === 2 && (
-                  <div className="space-y-3 relative overflow-hidden">
-                    <div className="p-3 bg-white border border-slate-200 rounded-lg flex justify-between">
-                      <span className="text-sm font-bold text-slate-700">Account Balance</span>
-                      <span className="text-sm font-mono text-emerald-600">$124,500.22</span>
+                  <div className="space-y-3 relative">
+                    <div className="p-4 bg-white border border-slate-200 rounded-xl flex justify-between shadow-sm">
+                      <span className="text-sm font-bold text-slate-800 tracking-tight">Q4 Projected Revenue</span>
+                      <span className="text-sm font-mono font-black text-emerald-600">$842,500.00</span>
                     </div>
-                    <div className="p-3 bg-white border border-slate-200 rounded-lg flex justify-between">
-                      <span className="text-sm font-bold text-slate-700">Owner Email</span>
-                      <span className="text-sm text-slate-500 underline">ceo@startup.io</span>
-                    </div>
-                    {/* The Smart Blur Overlay is handled by the button logic */}
-                    <div className="smart-blur-overlay hidden absolute inset-0 bg-blue-600/10 backdrop-blur-md flex items-center justify-center border-2 border-blue-500 rounded-xl z-50">
-                      <div className="p-3 bg-blue-600 text-white rounded-full shadow-lg">
-                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04M12 21.75c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z" /></svg>
-                      </div>
+                    <div className="p-4 bg-white border border-slate-200 rounded-xl flex justify-between shadow-sm">
+                      <span className="text-sm font-bold text-slate-800 tracking-tight">System Admin Access</span>
+                      <span className="text-sm text-blue-600 font-bold underline">root@production.db</span>
                     </div>
                   </div>
                 )}
@@ -196,40 +177,43 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
 
               {demoActioned ? (
                 <div className="animate-in zoom-in-95 duration-300">
-                  <div className="flex items-center gap-2 text-emerald-600 font-bold text-lg mb-6">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                    {step === 0 && "🎉 Perfect!"}
-                    {step === 1 && "🎉 Excellent!"}
-                    {step === 2 && "🎉 Amazing!"}
+                  <div className="flex items-center gap-3 text-emerald-600 font-black text-xl mb-6">
+                    <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    </div>
+                    {step === 0 && "Perfect!"}
+                    {step === 1 && "Excellent!"}
+                    {step === 2 && "Amazing!"}
                   </div>
                   <button 
                     onClick={handleNext}
-                    className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl transition-all shadow-xl shadow-blue-600/20 active:scale-95 flex items-center justify-center gap-2 group"
+                    className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl transition-all shadow-2xl shadow-blue-600/30 active:scale-95 flex items-center justify-center gap-3 text-lg"
                   >
-                    Next Step {Icons.ArrowRight("w-5 h-5 group-hover:translate-x-1 transition-transform")}
+                    Next Step 
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 text-slate-400 text-sm italic py-4 animate-pulse">
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                  Waiting for your action...
+                <div className="flex items-center justify-center gap-3 text-slate-400 text-sm font-bold py-4 bg-slate-50 rounded-2xl border border-slate-100 animate-pulse">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                  Waiting for extension action...
                 </div>
               )}
             </div>
           ) : (
-            <div className="bg-white rounded-[2.5rem] p-10 shadow-2xl text-center relative overflow-hidden animate-in zoom-in-95 duration-500">
-              <div className="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="bg-white rounded-[3rem] p-12 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.25)] text-center relative overflow-hidden animate-in zoom-in-95 duration-500 border border-slate-100">
+              <div className="w-24 h-24 bg-emerald-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-emerald-500/40 rotate-12">
                 <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
-              <h3 className="text-4xl font-bold text-slate-900 mb-6 tracking-tight">🎓 Tutorial Complete!</h3>
-              <p className="text-slate-600 mb-10 leading-relaxed text-lg">
-                You've mastered the essential tools to protect your privacy. All features are <span className="text-emerald-600 font-bold">UNLOCKED</span> and free to use on this demo page.
+              <h3 className="text-4xl font-black text-slate-900 mb-6 tracking-tight">🎓 Mastered!</h3>
+              <p className="text-slate-600 mb-12 leading-relaxed text-lg font-medium max-w-sm mx-auto">
+                You've successfully integrated Blur It with your workflow. Your privacy is now <span className="text-emerald-600 font-black uppercase tracking-widest">Guaranteed</span>.
               </p>
               <button 
                 onClick={handleFinish}
-                className="w-full py-5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition-all shadow-2xl shadow-slate-900/20 active:scale-95 text-lg"
+                className="w-full py-6 bg-slate-900 hover:bg-black text-white font-black rounded-[1.5rem] transition-all shadow-2xl shadow-slate-900/40 active:scale-95 text-xl tracking-tight"
               >
-                Start Using Blur It →
+                Start Protecting →
               </button>
             </div>
           )}
@@ -238,13 +222,9 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
 
       {isCelebration && (
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-           <div className="animate-ping absolute w-96 h-96 bg-blue-500/20 rounded-full"></div>
+           <div className="animate-ping absolute w-[500px] h-[500px] bg-blue-500/10 rounded-full"></div>
         </div>
       )}
     </div>
   );
-};
-
-const Icons = {
-  ArrowRight: (className: string) => <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>,
 };

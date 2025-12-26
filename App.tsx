@@ -7,7 +7,6 @@ import { DataTable } from './components/DataTable';
 import { CTAToast } from './components/CTAToast';
 import { IntroModal } from './components/IntroModal';
 import { TutorialSystem } from './components/TutorialSystem';
-import { DraggableToolbar } from './components/DraggableToolbar';
 
 const App: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
@@ -43,9 +42,6 @@ const App: React.FC = () => {
         onComplete={() => setIsTutorialActive(false)} 
       />
 
-      {/* Floating Toolbar (The Mock Extension) */}
-      <DraggableToolbar />
-
       {/* Fixed Sidebar */}
       <Sidebar />
 
@@ -80,7 +76,6 @@ const App: React.FC = () => {
             <DataTable />
           </section>
 
-          {/* Spacer to ensure scrollability for testing */}
           <div className="h-48"></div>
         </main>
       </div>
