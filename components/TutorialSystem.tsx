@@ -125,7 +125,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
               <h3 className="text-xl font-black mb-3 tracking-tight flex items-center gap-3">
                 {step === 0 ? (
                   <>
-                    <span>{hasBlurred ? 'Clear Selection' : 'Element Selection'}</span>
+                    <span>{hasBlurred ? 'Finish Task' : 'Element Selection'}</span>
                     {!hasBlurred ? (
                       <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
@@ -134,7 +134,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                   </>
                 ) : (
                   <>
-                    <span>{hasBlurred ? 'Clear Area' : 'Draw Protection'}</span>
+                    <span>{hasBlurred ? 'Finish Task' : 'Draw Protection'}</span>
                     {!hasBlurred ? (
                       <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4h16v16H4z" />
@@ -150,16 +150,24 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                     <p className="text-sm">
                       Use the <strong>{step === 0 ? 'Select tool' : 'Draw tool'}</strong> to {step === 0 ? 'click sensitive data' : 'cover an area'} in the practice zone.
                     </p>
-                    {step === 0 && (
-                      <p className="text-[10px] bg-amber-50 p-2 rounded-lg border border-amber-200 text-amber-900 font-bold">
-                        TIP: Press ESC key after selecting to exit the mode.
-                      </p>
-                    )}
+                    <div className="text-[10px] bg-blue-50 p-2 rounded-lg border border-blue-100 text-blue-900 font-bold">
+                      {step === 0 ? 'TIP: Press ESC key after selecting to exit the mode.' : 'TIP: Re-click the Draw icon to stop drawing.'}
+                    </div>
                   </>
                 ) : (
-                  <p className="text-sm">
-                    Great! Now click the <strong>Trash icon</strong> on your toolbar to clear the blurs and start fresh.
-                  </p>
+                  <div className="space-y-4">
+                    <p className="text-sm">
+                      Great! To finish this lesson:
+                    </p>
+                    <ul className="text-sm space-y-2 list-disc pl-4">
+                      <li>
+                        <strong>Stop the tool:</strong> {step === 0 ? 'Press the ESC key.' : 'Click the square icon again.'}
+                      </li>
+                      <li>
+                        <strong>Clear Blurs:</strong> Click the {Icons.Trash("w-4 h-4 inline-block text-rose-500")} <strong>Trash icon</strong> on your toolbar to reset.
+                      </li>
+                    </ul>
+                  </div>
                 )}
               </div>
 
