@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const Sidebar: React.FC = () => {
@@ -16,8 +15,8 @@ export const Sidebar: React.FC = () => {
       <div className="p-6">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21.5c-4.142 0-7.5-3.358-7.5-7.5 0-4.142 7.5-11.75 7.5-11.75s7.5 7.608 7.5 11.75c0 4.142-3.358 7.5-7.5 7.5z" />
             </svg>
           </div>
           <span className="text-xl font-bold tracking-tight">Blur It Admin</span>
