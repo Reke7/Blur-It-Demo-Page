@@ -353,10 +353,6 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
           <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">2</div>
           <p className="text-sm font-medium">✏️ Try <strong>Freehand Drawing</strong> blurs</p>
         </div>
-        <div className="flex items-center gap-4 text-slate-300 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-          <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">3</div>
-          <p className="text-sm font-medium">⚡ Activate 1-click <strong>Smart Blur</strong></p>
-        </div>
       </div>
       <div className="w-full space-y-4">
         <button 

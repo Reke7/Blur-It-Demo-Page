@@ -5,7 +5,7 @@ interface TutorialSystemProps {
   onComplete: () => void;
 }
 
-type Step = 0 | 1 | 2 | 3; // 0: Select, 1: Draw, 2: Smart, 3: Complete
+type Step = 0 | 1 | 2; // 0: Select, 1: Draw, 2: Complete
 
 export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComplete }) => {
   const [step, setStep] = useState<Step>(0);
@@ -15,7 +15,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
 
   // Spotlight positioning logic targeting external extension IDs
   const updateSpotlight = useCallback(() => {
-    const ids = ['#blur-it-selector', '#blur-it-area', '#blur-it-smart'];
+    const ids = ['#blur-it-selector', '#blur-it-area'];
     const el = document.querySelector(ids[step]);
     if (el) {
       setSpotlightRect(el.getBoundingClientRect());
@@ -26,7 +26,7 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
 
   useEffect(() => {
     if (isActive) {
-      const interval = setInterval(updateSpotlight, 100); // More frequent updates to track extension UI
+      const interval = setInterval(updateSpotlight, 100); // Frequent updates for dynamic toolbar
       window.addEventListener('resize', updateSpotlight);
       window.addEventListener('scroll', updateSpotlight);
       return () => {
@@ -43,10 +43,8 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
 
     const checkInterval = setInterval(() => {
       let isDone = false;
-      // We check for the classes/elements the user's extension is expected to inject
       if (step === 0) isDone = document.querySelectorAll('.blurred-element').length > 0;
       if (step === 1) isDone = document.querySelectorAll('.blur-rect').length > 0;
-      if (step === 2) isDone = document.querySelectorAll('.smart-blur-overlay:not(.hidden)').length > 0;
 
       if (isDone && !demoActioned) {
         setDemoActioned(true);
@@ -59,11 +57,11 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
   }, [isActive, step, demoActioned]);
 
   const handleNext = () => {
-    if (step < 2) {
+    if (step < 1) {
       setStep((s) => (s + 1) as Step);
       setDemoActioned(false);
     } else {
-      setStep(3);
+      setStep(2);
     }
   };
 
@@ -80,14 +78,14 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
       <div 
         className="absolute inset-0 bg-slate-950/85 transition-all duration-500 pointer-events-auto"
         style={{
-          clipPath: spotlightRect && step < 3
+          clipPath: spotlightRect && step < 2
             ? `polygon(0% 0%, 0% 100%, ${spotlightRect.left}px 100%, ${spotlightRect.left}px ${spotlightRect.top}px, ${spotlightRect.right}px ${spotlightRect.top}px, ${spotlightRect.right}px ${spotlightRect.bottom}px, ${spotlightRect.left}px ${spotlightRect.bottom}px, ${spotlightRect.left}px 100%, 100% 100%, 100% 0%)`
             : 'none'
         }}
       ></div>
 
       {/* Visual Feedback for Spotlight */}
-      {spotlightRect && step < 3 && (
+      {spotlightRect && step < 2 && (
         <div 
           className="absolute border-2 border-blue-500 rounded-xl animate-pulse shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all duration-300 pointer-events-none"
           style={{
@@ -102,11 +100,11 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
       {/* Tutorial Card */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="max-w-md w-full mx-4 pointer-events-auto animate-in fade-in slide-in-from-bottom-10 duration-700">
-          {step < 3 ? (
+          {step < 2 ? (
             <div className="bg-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden group border border-slate-200">
               <div className="flex items-center justify-between mb-6">
                 <span className="px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-[10px] font-black uppercase tracking-[0.15em]">
-                  Step {step + 1} of 3
+                  Step {step + 1} of 2
                 </span>
                 <button 
                   onClick={handleFinish}
@@ -116,19 +114,33 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                 </button>
               </div>
 
-              <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight">
-                {step === 0 && '🎯 Select Mode'}
-                {step === 1 && '✏️ Draw Mode'}
-                {step === 2 && '⚡ Smart Blur'}
+              <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight flex items-center gap-3">
+                {step === 0 ? (
+                  <><span>🎯 Select Mode</span> <span className="text-blue-500">↖️</span></>
+                ) : (
+                  <><span>✏️ Draw Mode</span> <span className="text-blue-500">⏹️</span></>
+                )}
               </h3>
 
               <p className="text-slate-600 mb-8 leading-relaxed font-medium">
-                {step === 0 && "Use your extension's 'Select' tool to click any of the email addresses in the practice zone below."}
-                {step === 1 && "Select the 'Draw' tool from your extension, then click and drag over the credit card card below."}
-                {step === 2 && "Finally, trigger your extension's 'Smart Blur' feature to see it automatically detect the sensitive data below."}
+                {step === 0 ? (
+                  <>
+                    Use your extension's <strong>Select tool</strong> (tilted left arrow icon ↖️) to click any email in the practice zone below.
+                    <span className="block mt-4 text-xs bg-amber-50 text-amber-800 p-3 rounded-xl border border-amber-100">
+                      <strong>Tip:</strong> Press the <strong>ESC</strong> (Escape) key to exit select mode before continuing to the next step.
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    Select the <strong>Draw tool</strong> (square icon ⏹️) from your extension, then click and drag over the credit card card below.
+                    <span className="block mt-4 text-xs bg-amber-50 text-amber-800 p-3 rounded-xl border border-amber-100">
+                      <strong>Tip:</strong> Click the <strong>Draw</strong> button again to disable draw mode before finishing.
+                    </span>
+                  </>
+                )}
               </p>
 
-              {/* Practice Zone - Designed for Extension Targeting */}
+              {/* Practice Zone */}
               <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl p-6 mb-8 transition-all group-hover:border-blue-300/50">
                 <p className="text-[10px] uppercase font-black text-slate-400 tracking-[0.2em] mb-4">Practice Zone</p>
                 
@@ -160,19 +172,6 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                     </div>
                   </div>
                 )}
-
-                {step === 2 && (
-                  <div className="space-y-3 relative">
-                    <div className="p-4 bg-white border border-slate-200 rounded-xl flex justify-between shadow-sm">
-                      <span className="text-sm font-bold text-slate-800 tracking-tight">Q4 Projected Revenue</span>
-                      <span className="text-sm font-mono font-black text-emerald-600">$842,500.00</span>
-                    </div>
-                    <div className="p-4 bg-white border border-slate-200 rounded-xl flex justify-between shadow-sm">
-                      <span className="text-sm font-bold text-slate-800 tracking-tight">System Admin Access</span>
-                      <span className="text-sm text-blue-600 font-bold underline">root@production.db</span>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {demoActioned ? (
@@ -181,15 +180,13 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                     <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
                     </div>
-                    {step === 0 && "Perfect!"}
-                    {step === 1 && "Excellent!"}
-                    {step === 2 && "Amazing!"}
+                    Perfect!
                   </div>
                   <button 
                     onClick={handleNext}
                     className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl transition-all shadow-2xl shadow-blue-600/30 active:scale-95 flex items-center justify-center gap-3 text-lg"
                   >
-                    Next Step 
+                    {step === 0 ? 'Next Step' : 'Finish Tutorial'}
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                   </button>
                 </div>
