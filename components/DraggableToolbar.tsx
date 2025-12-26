@@ -4,10 +4,8 @@ export const DraggableToolbar: React.FC = () => {
   const [activeTool, setActiveTool] = useState<'select' | 'draw' | null>(null);
   const [style, setStyle] = useState<'blur' | 'redact'>('blur');
 
-  // Mock Extension Functionality for Tutorial Detection
   const handleSelectClick = () => {
     setActiveTool(activeTool === 'select' ? null : 'select');
-    // Signal for tutorial logic
     document.dispatchEvent(new CustomEvent('blur-it-mode-change', { detail: 'select' }));
   };
 
@@ -17,7 +15,6 @@ export const DraggableToolbar: React.FC = () => {
   };
 
   const handleSmartBlurClick = () => {
-    // Mock the smart blur process
     const overlay = document.createElement('div');
     overlay.className = 'smart-blur-overlay hidden';
     document.body.appendChild(overlay);
@@ -26,6 +23,13 @@ export const DraggableToolbar: React.FC = () => {
       overlay.classList.remove('hidden');
       document.dispatchEvent(new CustomEvent('blur-it-smart-complete'));
     }, 500);
+  };
+
+  const handleClearClick = () => {
+    // Mock clearing blurs
+    const elements = document.querySelectorAll('.blurred-element, .blur-rect');
+    elements.forEach(el => el.remove());
+    document.dispatchEvent(new CustomEvent('blur-it-clear'));
   };
 
   return (
@@ -51,7 +55,7 @@ export const DraggableToolbar: React.FC = () => {
           className={`p-3 rounded-xl transition-all relative ${activeTool === 'draw' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110' : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'}`}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
           </svg>
         </button>
 
@@ -63,6 +67,19 @@ export const DraggableToolbar: React.FC = () => {
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </button>
+
+        <div className="h-[1px] bg-slate-700/50 mx-2 my-1"></div>
+
+        <button 
+          id="blur-it-clear"
+          onClick={handleClearClick}
+          title="Clear All Blurs"
+          className="p-3 rounded-xl bg-slate-800 text-rose-500 hover:text-rose-400 hover:bg-slate-700 transition-all"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
         </button>
       </div>

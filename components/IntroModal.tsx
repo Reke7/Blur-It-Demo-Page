@@ -134,6 +134,10 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
               <span className="text-emerald-400 font-bold">2.</span>
               <span><strong>Disable Blur Area:</strong> Click the <strong>square button</strong> again on your toolbar.</span>
             </li>
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-400 font-bold">3.</span>
+              <span><strong>Clear All Blurs:</strong> Click the <strong>trash icon</strong> on your toolbar.</span>
+            </li>
           </ul>
         </div>
 

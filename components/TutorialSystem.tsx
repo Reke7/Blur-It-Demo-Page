@@ -206,9 +206,14 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                 <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
               <h3 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Mastered</h3>
-              <p className="text-slate-500 mb-8 font-bold uppercase tracking-[0.2em] text-[10px]">
+              <p className="text-slate-500 mb-6 font-bold uppercase tracking-[0.2em] text-[10px]">
                 Your privacy is now guaranteed.
               </p>
+              <div className="bg-slate-50 p-4 rounded-xl mb-8 text-left border border-slate-100">
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                  <strong>Pro Tip:</strong> Want to start over? Click the <strong>clear button (trash icon)</strong> on your toolbar to clear all blurs instantly.
+                </p>
+              </div>
               <button 
                 onClick={handleFinish}
                 className="w-full py-5 bg-slate-900 hover:bg-black text-white font-black rounded-2xl transition-all shadow-xl active:scale-[0.98] text-lg"
