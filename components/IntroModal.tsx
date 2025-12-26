@@ -124,6 +124,9 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
     ArrowLeft: (c: string) => <svg className={c} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>,
     Shield: (c: string) => <svg className={c} fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.5c-4.142 0-7.5-3.358-7.5-7.5 0-4.142 7.5-11.75 7.5-11.75s7.5 7.608 7.5 11.75c0 4.142-3.358 7.5-7.5 7.5z" /></svg>,
     Check: (c: string) => <svg className={c} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>,
+    Select: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5.5 3.5l14.5 11-6.5.5 4 6-2 1.5-4-6.5-6 4z" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+    Draw: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="5" width="14" height="14" rx="1.5" /></svg>,
+    Clear: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="9" /><path d="M9 9l6 6m0-6l-6 6" strokeLinecap="round" /></svg>,
   };
 
   const renderWelcome = () => (
@@ -258,11 +261,15 @@ export const IntroModal: React.FC<IntroModalProps> = ({ isOpen, onClose, onStart
         <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
           <ul className="text-sm text-slate-300 space-y-3 font-bold">
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-[10px] font-black">1</span>
+              <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                {Icons.Select("w-4 h-4")}
+              </span>
               <span><strong>Exit Select:</strong> Press <strong>Esc</strong> key after blurring.</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-[10px] font-black">2</span>
+              <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                {Icons.Draw("w-4 h-4")}
+              </span>
               <span><strong>Stop Drawing:</strong> Re-click the square icon.</span>
             </li>
           </ul>

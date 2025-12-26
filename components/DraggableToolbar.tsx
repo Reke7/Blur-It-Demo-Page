@@ -32,6 +32,12 @@ export const DraggableToolbar: React.FC = () => {
     document.dispatchEvent(new CustomEvent('blur-it-clear'));
   };
 
+  const Icons = {
+    Select: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5.5 3.5l14.5 11-6.5.5 4 6-2 1.5-4-6.5-6 4z" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+    Draw: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="5" width="14" height="14" rx="1.5" /></svg>,
+    Clear: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="9" /><path d="M9 9l6 6m0-6l-6 6" strokeLinecap="round" /></svg>,
+  };
+
   return (
     <div className="fixed top-1/4 right-6 z-[60] flex flex-col items-center gap-4 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 p-3 rounded-2xl shadow-2xl animate-in fade-in slide-in-from-right-10 duration-700">
       <div className="w-8 h-1 bg-slate-700 rounded-full mb-1 cursor-grab active:cursor-grabbing"></div>
@@ -43,9 +49,7 @@ export const DraggableToolbar: React.FC = () => {
           title="Select Mode"
           className={`p-3 rounded-xl transition-all relative ${activeTool === 'select' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110' : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'}`}
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
-          </svg>
+          {Icons.Select("w-5 h-5")}
         </button>
 
         <button 
@@ -54,9 +58,7 @@ export const DraggableToolbar: React.FC = () => {
           title="Draw Mode"
           className={`p-3 rounded-xl transition-all relative ${activeTool === 'draw' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110' : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'}`}
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
+          {Icons.Draw("w-5 h-5")}
         </button>
 
         <button 
@@ -76,11 +78,9 @@ export const DraggableToolbar: React.FC = () => {
           id="blur-it-clear"
           onClick={handleClearClick}
           title="Clear All Blurs"
-          className="p-3 rounded-xl bg-slate-800 text-rose-500 hover:text-rose-400 hover:bg-slate-700 transition-all"
+          className="p-3 rounded-xl bg-slate-800 text-rose-500 hover:text-rose-400 hover:bg-slate-700 transition-all border border-transparent hover:border-rose-500/30"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
+          {Icons.Clear("w-5 h-5")}
         </button>
       </div>
 

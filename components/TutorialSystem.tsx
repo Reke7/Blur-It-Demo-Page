@@ -80,7 +80,9 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
   if (!isActive) return null;
 
   const Icons = {
-    Trash: (c: string) => <svg className={c} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+    Select: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5.5 3.5l14.5 11-6.5.5 4 6-2 1.5-4-6.5-6 4z" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+    Draw: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="5" width="14" height="14" rx="1.5" /></svg>,
+    Clear: (c: string) => <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="9" /><path d="M9 9l6 6m0-6l-6 6" strokeLinecap="round" /></svg>,
   };
 
   return (
@@ -126,20 +128,12 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                 {step === 0 ? (
                   <>
                     <span>{hasBlurred ? 'Finish Task' : 'Element Selection'}</span>
-                    {!hasBlurred ? (
-                      <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
-                      </svg>
-                    ) : Icons.Trash("w-5 h-5 text-rose-500")}
+                    {!hasBlurred ? Icons.Select("w-6 h-6 text-blue-500") : Icons.Clear("w-6 h-6 text-rose-500")}
                   </>
                 ) : (
                   <>
                     <span>{hasBlurred ? 'Finish Task' : 'Draw Protection'}</span>
-                    {!hasBlurred ? (
-                      <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 4h16v16H4z" />
-                      </svg>
-                    ) : Icons.Trash("w-5 h-5 text-rose-500")}
+                    {!hasBlurred ? Icons.Draw("w-6 h-6 text-blue-500") : Icons.Clear("w-6 h-6 text-rose-500")}
                   </>
                 )}
               </h3>
@@ -151,20 +145,22 @@ export const TutorialSystem: React.FC<TutorialSystemProps> = ({ isActive, onComp
                       Use the <strong>{step === 0 ? 'Select tool' : 'Draw tool'}</strong> to {step === 0 ? 'click sensitive data' : 'cover an area'} in the practice zone.
                     </p>
                     <div className="text-[10px] bg-blue-50 p-2 rounded-lg border border-blue-100 text-blue-900 font-bold">
-                      {step === 0 ? 'TIP: Press ESC key after selecting to exit the mode.' : 'TIP: Re-click the Draw icon to stop drawing.'}
+                      {step === 0 ? 'TIP: Press ESC key after selecting to exit the mode.' : 'TIP: Re-click the square icon to stop drawing.'}
                     </div>
                   </>
                 ) : (
                   <div className="space-y-4">
-                    <p className="text-sm">
+                    <p className="text-sm font-bold">
                       Great! To finish this lesson:
                     </p>
-                    <ul className="text-sm space-y-2 list-disc pl-4">
-                      <li>
-                        <strong>Stop the tool:</strong> {step === 0 ? 'Press the ESC key.' : 'Click the square icon again.'}
+                    <ul className="text-sm space-y-3">
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-500 font-black">•</span>
+                        <span><strong>Stop tool:</strong> {step === 0 ? 'Press ESC key.' : 'Click square icon again.'}</span>
                       </li>
-                      <li>
-                        <strong>Clear Blurs:</strong> Click the {Icons.Trash("w-4 h-4 inline-block text-rose-500")} <strong>Trash icon</strong> on your toolbar to reset.
+                      <li className="flex items-start gap-2">
+                        <span className="text-rose-500 font-black">•</span>
+                        <span><strong>Clear Blurs:</strong> Click the {Icons.Clear("w-4 h-4 inline-block text-rose-500")} <strong>Clear icon</strong> on your toolbar.</span>
                       </li>
                     </ul>
                   </div>
