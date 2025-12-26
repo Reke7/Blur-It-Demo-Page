@@ -1,20 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export const DraggableToolbar: React.FC = () => {
   const [activeTool, setActiveTool] = useState<'select' | 'draw' | null>(null);
   const [style, setStyle] = useState<'blur' | 'redact'>('blur');
 
+  // Mock Extension Functionality for Tutorial Detection
+  const handleSelectClick = () => {
+    setActiveTool(activeTool === 'select' ? null : 'select');
+    // Signal for tutorial logic
+    document.dispatchEvent(new CustomEvent('blur-it-mode-change', { detail: 'select' }));
+  };
+
+  const handleDrawClick = () => {
+    setActiveTool(activeTool === 'draw' ? null : 'draw');
+    document.dispatchEvent(new CustomEvent('blur-it-mode-change', { detail: 'draw' }));
+  };
+
+  const handleSmartBlurClick = () => {
+    // Mock the smart blur process
+    const overlay = document.createElement('div');
+    overlay.className = 'smart-blur-overlay hidden';
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => {
+      overlay.classList.remove('hidden');
+      document.dispatchEvent(new CustomEvent('blur-it-smart-complete'));
+    }, 500);
+  };
+
   return (
     <div className="fixed top-1/4 right-6 z-[60] flex flex-col items-center gap-4 bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 p-3 rounded-2xl shadow-2xl animate-in fade-in slide-in-from-right-10 duration-700">
-      {/* Handle */}
       <div className="w-8 h-1 bg-slate-700 rounded-full mb-1 cursor-grab active:cursor-grabbing"></div>
 
-      {/* Tools */}
       <div className="flex flex-col gap-2">
         <button 
-          onClick={() => setActiveTool(activeTool === 'select' ? null : 'select')}
+          id="blur-it-selector"
+          onClick={handleSelectClick}
           title="Select Mode"
-          className={`p-3 rounded-xl transition-all ${activeTool === 'select' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110' : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'}`}
+          className={`p-3 rounded-xl transition-all relative ${activeTool === 'select' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110' : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'}`}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
@@ -22,9 +45,10 @@ export const DraggableToolbar: React.FC = () => {
         </button>
 
         <button 
-          onClick={() => setActiveTool(activeTool === 'draw' ? null : 'draw')}
+          id="blur-it-area"
+          onClick={handleDrawClick}
           title="Draw Mode"
-          className={`p-3 rounded-xl transition-all ${activeTool === 'draw' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110' : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'}`}
+          className={`p-3 rounded-xl transition-all relative ${activeTool === 'draw' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-110' : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'}`}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -32,8 +56,10 @@ export const DraggableToolbar: React.FC = () => {
         </button>
 
         <button 
+          id="blur-it-smart"
+          onClick={handleSmartBlurClick}
           title="Smart Blur"
-          className="p-3 rounded-xl bg-slate-800 text-amber-400 hover:text-amber-300 hover:bg-slate-700 transition-all"
+          className="p-3 rounded-xl bg-slate-800 text-amber-400 hover:text-amber-300 hover:bg-slate-700 transition-all relative"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -43,7 +69,6 @@ export const DraggableToolbar: React.FC = () => {
 
       <div className="w-full h-[1px] bg-slate-700/50"></div>
 
-      {/* Style Toggle */}
       <button 
         onClick={() => setStyle(style === 'blur' ? 'redact' : 'blur')}
         className="flex flex-col items-center gap-1 group"

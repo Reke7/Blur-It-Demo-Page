@@ -6,20 +6,45 @@ import { MetricGrid } from './components/MetricGrid';
 import { DataTable } from './components/DataTable';
 import { CTAToast } from './components/CTAToast';
 import { IntroModal } from './components/IntroModal';
+import { TutorialSystem } from './components/TutorialSystem';
+import { DraggableToolbar } from './components/DraggableToolbar';
 
 const App: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [isIntroOpen, setIsIntroOpen] = useState(true);
+  const [isTutorialActive, setIsTutorialActive] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowToast(true), 1500);
+    const tutorialComplete = localStorage.getItem('blur-it-tutorial-complete');
+    if (tutorialComplete === 'true') {
+      setIsIntroOpen(false);
+    }
+
+    const timer = setTimeout(() => setShowToast(true), 2500);
     return () => clearTimeout(timer);
   }, []);
 
+  const handleStartTutorial = () => {
+    setIsIntroOpen(false);
+    setIsTutorialActive(true);
+  };
+
   return (
     <div className="flex min-h-screen text-slate-50 relative selection:bg-blue-500/30">
-      {/* Introduction Modal */}
-      <IntroModal isOpen={isIntroOpen} onClose={() => setIsIntroOpen(false)} />
+      {/* Introduction Modal & Tutorial */}
+      <IntroModal 
+        isOpen={isIntroOpen} 
+        onClose={() => setIsIntroOpen(false)} 
+        onStartTutorial={handleStartTutorial} 
+      />
+      
+      <TutorialSystem 
+        isActive={isTutorialActive} 
+        onComplete={() => setIsTutorialActive(false)} 
+      />
+
+      {/* Floating Toolbar (The Mock Extension) */}
+      <DraggableToolbar />
 
       {/* Fixed Sidebar */}
       <Sidebar />
